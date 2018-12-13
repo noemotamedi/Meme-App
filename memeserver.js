@@ -11,7 +11,7 @@ var session      = require('express-session');
 
 // Connect to DB
 //var configDB = require('./config/database.js');
-mongoose.connect('mongodb://malbinson:malbinson1@ds119503.mlab.com:19503/albinson');
+mongoose.connect('mongodb://noemotamedi:albins0n@ds123434.mlab.com:23434/memeapp');
 
 // set up our express application
 app.set('view engine','ejs');
