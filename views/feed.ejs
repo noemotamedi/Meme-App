@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+</head>
+
+
+<body>
+
+
+<ul class='memes'>
+<table class ="memes" border = "1px">
+  <tr>
+    <th>Joke</th>
+    <th>User</th>
+  </tr>
+  <% for(var i = 0; i < memes.length;i++){ %>
+    <tr>
+      <td><%= memes[i].meme %></td>
+      <td><%= memes[i].user %></td>
+    </tr>
+    <% }%>
+</ul>
+<p> <a href="/profile"> Go Back To Profile </a></p>
+</body>
+
+
+
+
+</html>

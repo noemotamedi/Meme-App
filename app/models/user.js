@@ -9,11 +9,13 @@ var userSchema = mongoose.Schema({
     local            : {
         email        : String,
         password     : String,
+        likes        : Number,
     },
     google           : {
         id           : String,
         token        : String,
         email        : String,
+        likes        : Number,
         name         : String
     }
 
@@ -31,3 +33,4 @@ userSchema.methods.validPassword = function(password) {
 };
 
 // create the model for users and expose it to our app
+module.exports = mongoose.model('User', userSchema);

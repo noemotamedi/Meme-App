@@ -1,10 +1,12 @@
 module.exports = function(app, passport) {
 
+  var Meme = require('../models/meme')
+
     // =====================================
     // HOME PAGE (with login links) ========
     // =====================================
     app.get('/', function(req, res) {
-        res.render('memeindex.ejs'); // load the index.ejs file
+        res.redirect('/feed'); // load the index.ejs file
     });
 
     // =====================================
@@ -16,6 +18,12 @@ module.exports = function(app, passport) {
         // render the page and pass in any flash data if it exists
         res.render('login.ejs', { message: req.flash('loginMessage') });
     });
+
+    app.post('/login', passport.authenticate('local-login', {
+    successRedirect : '/profile', // redirect to the secure profile section
+    failureRedirect : '/login', // redirect back to the signup page if there is an error
+    failureFlash : true // allow flash messages
+}));
 
     // process the login form
     // app.post('/login', do all our passport stuff here);
@@ -40,16 +48,59 @@ module.exports = function(app, passport) {
         failureRedirect : '/signup', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
+
+    app.post('/addMeme', function(req, res) {
+      var user = req.user;
+      var joke = req.body.joke;
+      var email = user.local.email;
+      console.log(joke);
+      //var jokeGoose = mongoose.model('Meme', memeSchema);
+      var meme = new Meme({meme: joke, user: email})
+      meme.save(function(err) {
+        console.log("Meme saved: " + meme)
+        if (err) throw err;
+      })
+      res.redirect("/profile")
+
+    })
     // =====================================
     // PROFILE SECTION =====================
     // =====================================
     // we will want this protected so you have to be logged in to visit
     // we will use route middleware to verify this (the isLoggedIn function)
     app.get('/profile', isLoggedIn, function(req, res) {
-        res.render('profile.ejs', {
-            user : req.user // get the user out of session and pass to template
+      //  var memesNew;
+        Meme.find({}, function (err, memes){
+
+            console.log(memes)
+        //  memesNew = memes;
+          res.render('profile.ejs', {
+              user : req.user,
+              memes: memes  // get the user out of session and pass to template
+          });
+
         });
+
+
+
     });
+
+    app.get('/feed', isLoggedIn, function(req, res) {
+
+      Meme.find({}, function (err, memes){
+
+          console.log(memes)
+        res.render("feed.ejs", {memes:memes});
+
+      });
+    });
+
+        //res.render('feed.ejs', {
+        //    user1 : req.user // get the user out of session and pass to template
+            //Meme.find({}, function(err, memes) {
+              //console.log(memes);
+            //})};
+
 
     // =====================================
     // LOGOUT ==============================
